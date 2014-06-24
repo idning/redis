@@ -1331,7 +1331,7 @@ static Msg* readMsg(FILE * fp){
 
     len = readLong(fp, '*');
     if (len < 1) {
-        ERROR("readLong return: %d", len);
+        ERROR("readLong * return: %d", len);
         return NULL;
     }
     DEBUG("got argc: %d", len);
@@ -1345,15 +1345,13 @@ static Msg* readMsg(FILE * fp){
     for (i = 0; i < msg->argc; i++) {
         len = readLong(fp, '$');
 
-        if (len < 1) {
-            ERROR("readLong return: %d", len);
-            goto err;
-        }
         msg->argv[i] = sdsnewlen(NULL, len);
-        ret = blockReadBytes(fp, msg->argv[i], len);
-        if (ret == -1) {
-            ERROR("blockReadBytes return: %d", ret);
-            goto err;
+        if (len > 0) {
+            ret = blockReadBytes(fp, msg->argv[i], len);
+            if (ret == -1) {
+                ERROR("blockReadBytes return: %d", ret);
+                goto err;
+            }
         }
 
         ret = blockReadBytes(fp, buf, 2); //CRCL
