@@ -272,7 +272,6 @@ static void writeHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
         }
         c->written += nwritten;
         if (sdslen(c->obuf) == c->written) {
-            fprintf(stderr, "xxx\n");
             aeDeleteFileEvent(config.el,c->context->fd,AE_WRITABLE);
             aeCreateFileEvent(config.el,c->context->fd,AE_READABLE,readHandler,c);
         }
@@ -596,7 +595,7 @@ int showThroughput(struct aeEventLoop *eventLoop, long long id, void *clientData
     if (config.csv) return 250;
     float dt = (float)(mstime()-config.start)/1000.0;
     float rps = (float)config.requests_finished/dt;
-    printf("%s: %.2f\r", config.title, rps);
+    printf("%s: %.2f\n", config.title, rps);
     fflush(stdout);
     return 250; /* every 250ms */
 }
@@ -785,6 +784,19 @@ int main(int argc, const char **argv) {
             }
             len = redisFormatCommandArgv(&cmd,21,argv,NULL);
             benchmark("MSET (10 keys)",cmd,len);
+            free(cmd);
+        }
+        if (test_is_selected("mget")) { //ning
+#define N 10000
+            const char *argv[N+1];
+            argv[0] = "MGET";
+            for (i = 1; i < N+1; i += 1) {
+                argv[i] = "key:__rand_int__";
+            }
+            len = redisFormatCommandArgv(&cmd,N+1,argv,NULL);
+            char tmp[1024];
+            sprintf(tmp, "MGET (%d keys)", N);
+            benchmark(tmp, cmd,len);
             free(cmd);
         }
 

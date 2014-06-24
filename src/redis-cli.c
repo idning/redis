@@ -1526,8 +1526,8 @@ static int cmdSupport(Msg *msg){
 
 input: msg
 output:
-    msgs: array of msg after rewrite
-    num: len of msgs after rewrite
+    o_msgs: array of msg after rewrite
+    o_num: len of msgs after rewrite
 return: 0 on success
 */
 static int rewriteMsg(Msg *msg, Msg ***o_msgs, int *o_num){
