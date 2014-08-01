@@ -787,7 +787,7 @@ int main(int argc, const char **argv) {
             free(cmd);
         }
         if (test_is_selected("mget")) { //ning
-#define N 10000
+#define N 100
             const char *argv[N+1];
             argv[0] = "MGET";
             for (i = 1; i < N+1; i += 1) {
