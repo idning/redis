@@ -1627,6 +1627,7 @@ static int myread(FILE * fp, char ** buf, int * buf_size, int * p_reqcnt){
 
     if (!cmdSupport(msg)){
         NOTICE("cmd not support: %s", msg->argv[0]); //TODO
+        freeMsg(msg);
         return 0;
     }
 
